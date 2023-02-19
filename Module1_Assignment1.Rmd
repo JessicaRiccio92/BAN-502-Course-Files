@@ -1,0 +1,37 @@
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(mice) 
+library(VIM) 
+```
+
+```{r}
+library(readr)
+class_grades <- read_csv("class-grades.csv")
+```
+```{r}
+str(class_grades)
+summary(class_grades)
+skim(class_grades)
+```
+
+```{r}
+vim_plot = aggr(class_grades, numbers = TRUE, prop = c(TRUE, FALSE),cex.axis=.6)
+```
+
+```{r}
+class_grades_rowdel = class_grades %>% drop_na() 
+nrow(class_grades_rowdel)
+```
+```{r}
+class_grade_coldel = class_grades %>% select(-Tutorial,-Midterm,-TakeHome,-Final) 
+ncol(class_grade_coldel)
+```
+```{r}
+set.seed(123)
+imp_classgrades = mice(class_grades, m=5, method='pmm', printFlag=FALSE)
+classgrades_complete = complete(imp_classgrades) 
+summary(classgrades_complete)
+```
+
